@@ -9,7 +9,8 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className='text-white'>
-        Atlanta
+        Atlanta 
+        
         </div>
         {/* Buttons */}
         <div className="flex space-x-4">
@@ -23,3 +24,7 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+/*
+Alvis (อัสวิส) เทพแห่งการหยั่งรู้ทุกอย่าง
+Brida (บรด้า) เทพีบทกวี และภูมิปัญญา
+Atlanta (แอทแลนตา) เทพีแห่งความรวดเร็ว และฉลาด ชื่อของเธอถูกนำมาตั้งเป็นชื่อมหาสมุทรแอทแลนติก */
