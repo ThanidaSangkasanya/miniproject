@@ -1,5 +1,10 @@
 import Head from 'next/head';
-import Header from './component/Header';
+import prisma from "@/utils/db"
+import Link from "next/link";
+import Header from './component/Header/page';
+import CartButton from './component/cartButton';
+import RegisterButton from './component/RegistorButton';
+import LoginButton from './component/LoginButton';
 //import SearchBar from '../components/SearchBar';
 
 const Home: React.FC = () => {
@@ -10,7 +15,9 @@ const Home: React.FC = () => {
         <meta name="description" content="Online bookstore example layout" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
+      <div >
+      
+      </div>
       {/*<SearchBar />*/}
       <main className="bg-white p-4">
         <div className="container mx-auto">

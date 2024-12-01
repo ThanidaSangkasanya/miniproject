@@ -1,3 +1,4 @@
+
 export default async function hashPassword(password: string) {
     const arrayBuffer = await crypto.subtle.digest(
         "SHA-512", 
