@@ -19,10 +19,15 @@ model User {
 }
 
 model Book {
-  id    Int    @id @default(autoincrement())
-  name  String
-  price Float
-  orders Order[]
+  id          Int      @id @default(autoincrement())
+  name        String
+  author      String   // Author of the book
+  description String   // A brief description of the book
+  price       Float
+  stock       Int      // Quantity available
+  publishedAt DateTime // Publish date
+  imageUrl    String   // Cover image URL
+  orders      Order[]
 }
 
 model Order {

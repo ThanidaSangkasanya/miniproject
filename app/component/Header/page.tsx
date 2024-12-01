@@ -12,31 +12,7 @@ const Header: React.FC = () => {
           {/* Add more content here */}
         </div>
 
-        {/* Header Links */}
-        <nav>
-          <ul className="flex space-x-6">
-            <li>
-              <a href="/" className="hover:text-gray-200">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="/about" className="hover:text-gray-200">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="/books" className="hover:text-gray-200">
-                Books
-              </a>
-            </li>
-            <li>
-              <a href="/contact" className="hover:text-gray-200">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </nav>
+        
 
       
       </div>
