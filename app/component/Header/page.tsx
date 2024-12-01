@@ -1,31 +1,47 @@
 import Image from 'next/image';
-import LoginButton from '../LoginButton';
-import RegisterButton from '../RegistorButton';
 import CartButton from '../cartButton';
+
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-gradient-to-r from-[#8FDDE7] to-[#FFC2C7] text-white p-4">
+    <header className="bg-gradient-to-r from-[#8FDDE7] to-[#FFC2C7] text-white p-5">
       <div className="container mx-auto flex justify-between items-center">
-        {/*bg-gradient-to-r from-[rgba(208,106,172,1)] to-[rgba(144,104,191,1)] */}
-        {/* Logo */}
-        <div className='text-white'>
-        Atlanta 
         
+        <div className="container m-2">
+          <h1 className="text-2xl font-bold ">Welcome to the Atlanta Bookstore</h1>
+          {/* Add more content here */}
         </div>
-        {/* Buttons */}
-      <div className="flex space-x-4">
-          <LoginButton />
-          <RegisterButton />
-          <CartButton />
-        </div>
+
+        {/* Header Links */}
+        <nav>
+          <ul className="flex space-x-6">
+            <li>
+              <a href="/" className="hover:text-gray-200">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/about" className="hover:text-gray-200">
+                About
+              </a>
+            </li>
+            <li>
+              <a href="/books" className="hover:text-gray-200">
+                Books
+              </a>
+            </li>
+            <li>
+              <a href="/contact" className="hover:text-gray-200">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+      
       </div>
     </header>
   );
 };
 
 export default Header;
-/*
-Alvis (อัสวิส) เทพแห่งการหยั่งรู้ทุกอย่าง
-Brida (บรด้า) เทพีบทกวี และภูมิปัญญา
-Atlanta (แอทแลนตา) เทพีแห่งความรวดเร็ว และฉลาด ชื่อของเธอถูกนำมาตั้งเป็นชื่อมหาสมุทรแอทแลนติก */

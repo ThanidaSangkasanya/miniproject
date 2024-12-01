@@ -21,8 +21,8 @@ const Home: React.FC = () => {
       {/*<SearchBar />*/}
       <main className="bg-white p-4">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold mb-4">Welcome to the Atlanta Bookstore</h1>
-          {/* Add more content here */}
+          {/*<h1 className="text-2xl font-bold mb-4">Welcome to the Atlanta Bookstore</h1>
+           Add more content here */}
         </div>
       </main>
     </>
