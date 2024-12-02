@@ -1,80 +1,84 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import SubmitButton from "../component/SubmitButton"
+import { useActionState } from 'react';
+import login from '../action/login';
+import SubmitButton from '../component/SubmitButton';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [data, action] = useActionState(login, {});
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const res = await fetch("/action/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      // On successful login, redirect to the dashboard or any other page
-      router.push("/dashboard")
-    } else {
-      // If login fails, show the error message
-      setError(data.message)
-    }
+  // Redirect to the main page if login is successful
+  if (data.message) {
+    router.push('/');
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-semibold text-center mb-6">Login</h2>
-      <hr className="mb-4" />
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-col">
-          <label htmlFor="email" className="text-sm font-medium mb-1">Email</label>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+      <form action={action} className="space-y-4">
+        {/* Email Field */}
+        <div>
+          <label htmlFor="email" className="block font-medium text-gray-700">
+            Email
+          </label>
           <input
-            className="border border-gray-300 rounded-md p-2"
             type="email"
             name="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             required
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {data.error?.email && (
+            <div className="mt-1 text-sm text-red-600">{data.error?.email[0]}</div>
+          )}
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="password" className="text-sm font-medium mb-1">Password</label>
+
+        {/* Password Field */}
+        <div>
+          <label htmlFor="password" className="block font-medium text-gray-700">
+            Password
+          </label>
           <input
-            className="border border-gray-300 rounded-md p-2"
             type="password"
             name="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             required
+            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {data.error?.password && (
+            <div className="mt-1 text-sm text-red-600">{data.error?.password[0]}</div>
+          )}
         </div>
+
+        {/* Remember Me Checkbox */}
         <div className="flex items-center">
-          <input className="w-6 h-6 mr-2" type="checkbox" name="remember" id="remember" />
-          <label htmlFor="remember" className="text-sm">Remember me</label>
+          <input
+            type="checkbox"
+            name="remember"
+            id="remember"
+            className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label htmlFor="remember" className="ml-2 text-gray-700">
+            Remember me
+          </label>
         </div>
-        {error && <div className="text-red-600 text-sm">{error}</div>}
+
+        {/* Error Message */}
+        {data.error?.message && (
+          <div className="text-sm text-red-600">{data.error?.message}</div>
+        )}
+
+        {/* Submit Button or Success Message */}
         <div>
-          <SubmitButton label="Login" />
+          {data.message ? (
+            <p className="text-sm text-green-600">{data.message}</p>
+          ) : (
+            <SubmitButton label="Login" />
+          )}
         </div>
       </form>
-      <br />
-      <hr />
-      <div className="text-center mt-4">
-        <a href="/forgot-password" className="text-blue-500">Forgot password?</a>
-      </div>
     </div>
-  )
+  );
 }

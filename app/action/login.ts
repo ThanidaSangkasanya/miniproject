@@ -1,37 +1,69 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import prisma from "../../utils/db"
-import hashPassword from "../../utils/hashPassword" // Assuming this file exists in your utils
+"use server"
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Only POST requests are allowed" })
-  }
+import prisma from "@/utils/db"
+import isValidPassword from "@/utils/isValidPassword";
+import { loginUser } from "@/utils/loginUser";
+import { z } from "zod";
 
-  const { email, password } = req.body
+const addSchema = z.object({
+    email: z.string().email().max(20),
+    password: z.string().min(3),
+    remember: z
+        .union([z.string(), z.undefined()]) // Accept string ('on') or undefined
+        .transform((val) => val === "on"),  // Transform 'on' to true, undefined to false
+})
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" })
-  }
+type fieldErrors = {
+    email?: string[] | undefined;
+    password?: string[] | undefined;
+    remember?: string[] | undefined;
+    message?: string | undefined;
+}
 
-  try {
-    // Find user by email
-    const user = await prisma.user.findUnique({
-      where: { email },
-    })
+export default async function login(prevState: unknown, formData: FormData):
+    Promise<{
+        message?: string
+        data?: string
+        error?: fieldErrors
+    }> {
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" })
+    console.log("Email: " + formData.get("email") +
+        formData.get("name"))
+
+    const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
+    if (result.success === false) {
+        console.log("Error: ", result.error.formErrors.fieldErrors)
+        return { error: result.error.formErrors.fieldErrors }
     }
 
-    // Verify password
-    const hashedPassword = await hashPassword(password)
-    if (hashedPassword !== user.password) {
-      return res.status(401).json({ message: "Invalid email or password" })
-    }
+    const data = result.data
+    let { email, password, remember } = data
 
-    // If authentication is successful, return the user details or a token
-    return res.status(200).json({ message: "Login successful", user })
-  } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" })
-  }
+    try {
+        const user = await prisma.user.findUnique({
+            where: { email },
+        })
+
+        console.log("Remember: ", remember)
+
+        if (user) {
+            console.log("User found:", user);
+            // === Todo 5: Verify user credential ===
+            if (await isValidPassword(password, user.password)) {
+                 console.log("Right pass")
+                 return await loginUser(user, remember);
+             }
+             else {
+                 console.log("Wrong pass")
+               return { error: { message: "Incorrect user or password" } }
+             }
+        } else {
+            console.log("No user found with that email.");
+            return { error: { message: "Cannot find a user" } }
+        }
+
+    } catch (error) {
+        console.log("error: " + error)
+        return { error: { message: error + "" } }
+    }
 }
