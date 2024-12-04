@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Footer from "@/app/component/Footer/page";
-import Header from "./component/Header/page";
-import Navbar from "./component/Navbar/page";
+import Footer from "@/app/component/Footer";
+import Header from "./component/Header";
+import Navbar from "./component/Navbar";
 import { UserProvider } from "./contexts/UserContext";
 
 const geistSans = localFont({
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-      
+        suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />

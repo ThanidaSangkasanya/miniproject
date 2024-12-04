@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import CartButton from '../cartButton';
+import CartButton from '../component/cartButton';
 
 
 const Header: React.FC = () => {

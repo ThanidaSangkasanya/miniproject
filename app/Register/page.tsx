@@ -1,13 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import SubmitButton from '../component/SubmitButton';
 import register from '../action/register';
 import { useActionState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterForm() {
   const [data, action] = useActionState(register, {});
+  const router = useRouter();
+
+  // Redirect to the main page after successful registration
+  useEffect(() => {
+    if (data.message) {
+      router.push('/');
+    }
+  }, [data.message, router]);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
@@ -78,13 +86,6 @@ export default function RegisterForm() {
           )}
         </div>
       </form>
-
-      {/* Back Link */}
-      <div className="mt-6 text-center">
-        <Link href="/blog" className="text-blue-500 hover:underline">
-          Back
-        </Link>
-      </div>
     </div>
   );
 }

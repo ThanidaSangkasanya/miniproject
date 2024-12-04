@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import CartButton from "../cartButton";
-import LoginButton from "../LoginButton";
-import RegisterButton from "../RegistorButton";
+import CartButton from "./cartButton";
+import LoginButton from "./LoginButton";
+import RegisterButton from "./RegistorButton";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

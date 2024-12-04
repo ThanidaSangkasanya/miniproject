@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useEffect } from 'react';
 import { useActionState } from 'react';
 import login from '../action/login';
 import SubmitButton from '../component/SubmitButton';
@@ -9,10 +10,12 @@ export default function Login() {
   const [data, action] = useActionState(login, {});
   const router = useRouter();
 
-  // Redirect to the main page if login is successful
-  if (data.message) {
-    router.push('/');
-  }
+  // Redirect to the main page after successful login
+  useEffect(() => {
+    if (data.message) {
+      router.push('/');
+    }
+  }, [data.message, router]);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
@@ -50,19 +53,6 @@ export default function Login() {
           {data.error?.password && (
             <div className="mt-1 text-sm text-red-600">{data.error?.password[0]}</div>
           )}
-        </div>
-
-        {/* Remember Me Checkbox */}
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="remember"
-            id="remember"
-            className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <label htmlFor="remember" className="ml-2 text-gray-700">
-            Remember me
-          </label>
         </div>
 
         {/* Error Message */}

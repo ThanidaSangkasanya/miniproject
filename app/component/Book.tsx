@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchBooksFromAPI } from "../action/Books";
-import { Book } from "@/types/books"; // Adjust the import path based on your file structure
+import { Book } from "@/types/books"; 
 
 const BooksPage: React.FC = () => {
   const [query, setQuery] = useState<string>(""); // State for the search query
@@ -12,6 +12,15 @@ const BooksPage: React.FC = () => {
     const fetchedBooks = await fetchBooksFromAPI(query);
     setBooks(fetchedBooks);
   };
+
+  useEffect(() => {
+    const initBook = async () => {
+      const fetchedBooks = await fetchBooksFromAPI("Marvel");
+      setBooks(fetchedBooks);
+    }
+    initBook()
+    console.log("Call use effect")
+  },[])
 
   return (
     <div className="container mx-auto py-4">
@@ -29,7 +38,7 @@ const BooksPage: React.FC = () => {
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {books.map((book) => (
+        {books?.map((book) => (
           <div key={book.id} className="border p-4 rounded shadow">
             <img src={book.imageUrl} alt={book.name} className="mb-2" />
             <h2 className="font-bold text-lg">{book.name}</h2>

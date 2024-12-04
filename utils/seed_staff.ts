@@ -21,4 +21,4 @@ async function STAFF() {
   }
 }
 
-STAFF();
+export default STAFF();

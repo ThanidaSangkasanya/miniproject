@@ -5,7 +5,8 @@ export const fetchBooksFromAPI = async (query: string): Promise<Book[]> => {
     try {
       const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch books");
+        // throw new Error("Failed to fetch books");
+        alert("Cannot fetch book")
       }
       const data = await response.json();
   
@@ -15,13 +16,13 @@ export const fetchBooksFromAPI = async (query: string): Promise<Book[]> => {
         name: item.volumeInfo.title,
         author: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Unknown Author",
         description: item.volumeInfo.description || "No description available.",
-        price: Math.random() * 20 + 5, // Random price (Google Books API doesn't provide pricing)
+        price: Math.random() * 20 + 5, 
         stock: 10, // Arbitrary stock value
         publishedAt: item.volumeInfo.publishedDate || "Unknown Date",
         imageUrl: item.volumeInfo.imageLinks?.thumbnail || "/default-book-cover.jpg",
       }));
     } catch (error) {
-      console.error(error);
+      console.log("Error fetching books:", error);
       return [];
     }
   };
