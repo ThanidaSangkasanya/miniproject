@@ -28,7 +28,7 @@ export const metadata = {
     
   return (
     <>
-      <div className="flex items-center justify-between p-4  shadow-md">
+      <div className="flex items-center justify-between p-4 bg-gray-100 shadow-md">
   {user ? (
     <div className="flex items-center space-x-2">
       <span className="text-lg font-medium text-gray-800">Hello, {user.name}</span>

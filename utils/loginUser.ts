@@ -52,7 +52,7 @@ export async function logoutUser() {
   return { message: "Logout Success" }
 }
 
-export async function getSession() {
+export async function getSession(req?: unknown) {
   const session = (await cookies()).get("session")?.value;
   if (!session) return null;
   return await decrypt(session);
