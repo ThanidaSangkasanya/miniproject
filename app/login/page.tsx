@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import login from '../action/login';
 import SubmitButton from '../component/SubmitButton';
 import { useRouter } from 'next/navigation';
+import StaffButton from '../component/StaffButton'; // Ensure the correct import path
 
 export default function Login() {
   const [data, action] = useActionState(login, {});
@@ -18,7 +19,12 @@ export default function Login() {
   }, [data.message, router]);
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <div className="relative max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+      {/* Staff Button */}
+      <div className="absolute top-4 right-4">
+        <StaffButton />
+      </div>
+
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form action={action} className="space-y-4">
         {/* Email Field */}

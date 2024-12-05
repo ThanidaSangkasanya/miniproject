@@ -3,6 +3,8 @@ import { useState } from "react";
 import CartButton from "./cartButton";
 import LoginButton from "./LoginButton";
 import RegisterButton from "./RegistorButton";
+import StaffButton from "./StaffButton";
+
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,6 +41,9 @@ const Navbar: React.FC = () => {
           <LoginButton />
           <RegisterButton />
           <CartButton />
+         
+        <StaffButton />
+      
         </div>
 
         {/* Hamburger Icon */}
