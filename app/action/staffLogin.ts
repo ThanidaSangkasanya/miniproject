@@ -1,9 +1,8 @@
-"use server";
-
+// app/action/staffLogin.ts
 import prisma from "@/utils/db";
 import isValidPassword from "@/utils/isValidPassword";
-import { loginUser } from "@/utils/loginUser";
 import { z } from "zod";
+import { seed } from "@/utils/seed_staff";
 
 const staffSchema = z.object({
   email: z.string().email(),
@@ -28,21 +27,24 @@ export default async function staffLogin(
   const { email, password } = result.data;
 
   try {
-    const staff = await prisma.user.findUnique({
+    let staff = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!staff || staff.role !== "STAFF") {
-      return { error: { message: "Staff account not found" } };
+      await seed();
+      staff = await prisma.user.findUnique({
+        where: { email },
+      });
     }
 
-    if (await isValidPassword(password, staff.password)) {
-      return loginUser(staff, false);
+    if (staff && await isValidPassword(password, staff.password)) {
+      return { message: "Login Success" };
     }
 
     return { error: { message: "Invalid email or password" } };
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return { error: { message: "An error occurred during login" } };
   }
 }

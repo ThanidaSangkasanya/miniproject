@@ -1,24 +1,18 @@
-import  prisma  from "@/utils/db";
+// utils/seed_staff.ts
+import prisma from "@/utils/db";
+import hashPassword from "@/utils/hashPassword";
 
+export async function seed(): Promise<void> {
+  const hashedPassword = await hashPassword("thanida3032");
 
+  await prisma.user.create({
+    data: {
+      name: "Thanida",
+      email: "thanida@gmail.com",
+      password: hashedPassword,
+      role: "STAFF",
+    },
+  });
 
-async function STAFF() {
-  try {
-    const user = await prisma.user.create({
-      data: {
-        name: "Thanida",
-        email: "3032@gmail.com",
-        password: "Thani", 
-        role: "STAFF",
-      },
-    });
-
-    console.log("User created:", user);
-  } catch (error) {
-    console.error("Error creating user:", error);
-  } finally {
-    await prisma.$disconnect();
-  }
+  console.log("Staff account created!");
 }
-
-export default STAFF();

@@ -1,4 +1,4 @@
-import seed from "@/utils/seed_staff";
+import {seed} from "@/utils/seed_staff";
 
 export default async function Seed() {
  

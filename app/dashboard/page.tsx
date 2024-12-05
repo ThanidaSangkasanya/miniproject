@@ -1,101 +1,83 @@
-import prisma from "@/utils/db";
-import { Book } from "@/types/books"; // Import the Book interface
-import BookCard from "../component/BookCard"; // Import the BookCard component
-import { revalidatePath } from "next/cache";
+// app/dashboard/page.tsx
+"use client";
 
-export default async function Dashboard() {
-    // Fetch the books from Prisma
-    const data = await prisma.book.findMany();
-  
-    // Manually convert the publishedAt field to a string (ISO format)
-    const books: Book[] = data.map((book) => ({
-      ...book,
-      publishedAt: book.publishedAt.toISOString(), // Convert Date to string (ISO format)
-    }));
-  
-    // Create Book function
-    async function createBook(formData: FormData) {
-      "use server";
-      const name = formData.get("name") as string;
-      const author = formData.get("author") as string;
-      const description = formData.get("description") as string;
-      const price = parseFloat(formData.get("price") as string);
-      const stock = parseInt(formData.get("stock") as string);
-      const publishedAt = formData.get("publishedAt") as string;
-      const imageUrl = formData.get("imageUrl") as string;
-  
-      await prisma.book.create({
-        data: { name, author, description, price, stock, publishedAt, imageUrl },
-      });
-      revalidatePath("/dashboard");
-    }
-  
-    // Update Book function
-    async function updateBook(formData: FormData) {
-      "use server";
-      const id = parseInt(formData.get("id") as string);
-      const name = formData.get("name") as string;
-      const author = formData.get("author") as string;
-      const description = formData.get("description") as string;
-      const price = parseFloat(formData.get("price") as string);
-      const stock = parseInt(formData.get("stock") as string);
-      const publishedAt = formData.get("publishedAt") as string;
-      const imageUrl = formData.get("imageUrl") as string;
-  
-      await prisma.book.update({
-        where: { id },
-        data: { name, author, description, price, stock, publishedAt, imageUrl },
-      });
-      revalidatePath("/dashboard");
-    }
-  
-    // Delete Book function
-    async function deleteBook(id: number) {
-      "use server";
-      await prisma.book.delete({ where: { id } });
-      revalidatePath("/dashboard");
-    }
-  
-    return (
-      <div className="flex flex-col bg-gradient-to-b from-[#05445e] to-[#75e6da] min-h-screen items-center justify-start">
-        <h1 className="text-4xl font-bold text-white m-5">Book Management</h1>
-  
-        <div className="bg-[#189ab4] border-1 border-black m-12 p-3">
-          <form action={createBook}>
-            <label>Name:</label>
-            <input type="text" name="name" className="border-2 border-black m-2 text-black" required />
-            <label>Author:</label>
-            <input type="text" name="author" className="border-2 border-black m-2 text-black" required />
-            <label>Description:</label>
-            <textarea name="description" className="border-2 border-black m-2 text-black" required />
-            <label>Price:</label>
-            <input type="number" name="price" className="border-2 border-black m-2 text-black" required />
-            <label>Stock:</label>
-            <input type="number" name="stock" className="border-2 border-black m-2 text-black" required />
-            <label>Published At:</label>
-            <input type="date" name="publishedAt" className="border-2 border-black m-2 text-black" required />
-            <label>Image URL:</label>
-            <input type="text" name="imageUrl" className="border-2 border-black m-2 text-black" required />
-            <button type="submit" className="border-2 border-black m-2">
-              Add Book
-            </button>
-          </form>
-        </div>
-  
-        <div className="flex gap-4 flex-wrap justify-center">
-          {books && books.length > 0 ? (
-            books.map((book: Book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                deleteBook={deleteBook}
-                updateBook={updateBook}
-              />
-            ))
-          ) : (
-            <p>No books available</p>
-          )}
-        </div>
+import { createBook, updateBook } from "../action/Bookaction";  // Import the server actions
+import React from "react";
+
+export default function Dashboard() {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    // Call the server-side action
+    await createBook(formData);
+  };
+
+  const handleUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    // Call the server-side action
+    await updateBook(formData);
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
+      
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Create Book</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Book Name</label>
+            <input type="text" name="name" placeholder="Book Name" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Author</label>
+            <input type="text" name="author" placeholder="Author" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea name="description" placeholder="Description" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Image URL</label>
+            <input type="text" name="imageUrl" placeholder="Image URL" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Price</label>
+            <input type="number" name="price" placeholder="Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create Book</button>
+        </form>
       </div>
-    );
-  }
+
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">Update Book</h2>
+        <form onSubmit={handleUpdate} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Book ID</label>
+            <input type="number" name="id" placeholder="Book ID" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Name</label>
+            <input type="text" name="name" placeholder="Updated Name" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Author</label>
+            <input type="text" name="author" placeholder="Updated Author" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Image URL</label>
+            <input type="text" name="imageUrl" placeholder="Updated Image URL" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Price</label>
+            <input type="number" name="price" placeholder="Updated Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Book</button>
+        </form>
+      </div>
+    </div>
+  );
+}
