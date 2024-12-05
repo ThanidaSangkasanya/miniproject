@@ -9,7 +9,7 @@ export default function Dashboard() {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
 
-    // Call the server-side action
+    // Call the server-side action to create a new book
     await createBook(formData);
   };
 
@@ -17,14 +17,15 @@ export default function Dashboard() {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
 
-    // Call the server-side action
+    // Call the server-side action to update an existing book
     await updateBook(formData);
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
-      
+
+      {/* Create Book Form */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <h2 className="text-2xl font-semibold mb-4">Create Book</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -48,10 +49,19 @@ export default function Dashboard() {
             <label className="block text-sm font-medium text-gray-700">Price</label>
             <input type="number" name="price" placeholder="Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Stock</label>
+            <input type="number" name="stock" placeholder="Stock" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Published Date</label>
+            <input type="date" name="publishedAt" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
           <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create Book</button>
         </form>
       </div>
 
+      {/* Update Book Form */}
       <div className="bg-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">Update Book</h2>
         <form onSubmit={handleUpdate} className="space-y-4">
@@ -74,6 +84,14 @@ export default function Dashboard() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Updated Price</label>
             <input type="number" name="price" placeholder="Updated Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Stock</label>
+            <input type="number" name="stock" placeholder="Updated Stock" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Updated Published Date</label>
+            <input type="date" name="publishedAt" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
           </div>
           <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Book</button>
         </form>
