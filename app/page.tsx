@@ -1,10 +1,4 @@
 import prisma from "@/utils/db";
-import Link from "next/link";
-
-import CartButton from '../app/component/cartButton';
-import RegisterButton from '../app/component/RegistorButton';
-import LoginButton from '../app/component/LoginButton';
-//import SearchBar from '../components/SearchBar';
 import BooksPage from "../app/component/Book";
 import { getSession } from "@/utils/loginUser";
 import Logout from "../app/component/logout";

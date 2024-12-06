@@ -3,7 +3,7 @@ import { useState } from "react";
 import CartButton from "./cartButton";
 import LoginButton from "./LoginButton";
 import RegisterButton from "./RegistorButton";
-import StaffButton from "./StaffButton";
+
 
 
 const Navbar: React.FC = () => {
@@ -12,16 +12,37 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-gradient-to-r from-[#8FDDE7] to-[#FFC2C7]  py-3 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-       
-        
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex space-x-8 text-lg text-white">
+          <li>
+            <a href="/" className="hover:text-gray-100 transition duration-200">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/about" className="hover:text-gray-100 transition duration-200">
+              About
+            </a>
+          </li>
+          <li>
+            <a href="/books" className="hover:text-gray-100 transition duration-200">
+              Books
+            </a>
+          </li>
+          <li>
+            <a href="/contact" className="hover:text-gray-100 transition duration-200">
+              Contact
+            </a>
+          </li>
+        </ul>
 
         {/* Action Buttons (Desktop) */}
         <div className="hidden md:flex space-x-4">
           <LoginButton />
           <RegisterButton />
           <CartButton />
-         
         
+      
         </div>
 
         {/* Hamburger Icon */}

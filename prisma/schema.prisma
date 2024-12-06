@@ -15,7 +15,7 @@ model User {
   email    String @unique
   password String
   role     String @default("USER") // 'USER' or 'STAFF'
-  orders   Order[]
+  
 }
 
 model Book {
@@ -27,17 +27,8 @@ model Book {
   stock       Int      // Quantity available
   publishedAt DateTime // Publish date
   imageUrl    String   // Cover image URL
-  orders      Order[]
+  
 }
 
-model Order {
-  id        Int    @id @default(autoincrement())
-  userId    Int
-  bookId    Int
-  quantity  Int
-  total     Float
 
-  user      User   @relation(fields: [userId], references: [id])
-  book      Book   @relation(fields: [bookId], references: [id])
-}
 
