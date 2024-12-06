@@ -1,100 +1,118 @@
-// app/dashboard/page.tsx
 "use client";
-
-import { createBook, updateBook } from "../action/Bookaction";  // Import the server actions
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Book } from "../../types/books";
+import CreateForm from "../component_staff/CreateForm";
+import EditForm from "../component_staff/EditForm";
+import prisma from "@/utils/db";
 
 export default function Dashboard() {
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null); // For editing
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
-    // Call the server-side action to create a new book
-    await createBook(formData);
+  // Fetch books from the API
+  const fetchBooks = async () => {
+    try {
+      const response = await fetch("/action_staff/books");
+      const data: Book[] = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.log("Error fetching books:", error);
+    }
   };
 
-  const handleUpdate = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
+  useEffect(() => {
+    fetchBooks();
+  }, []);
 
-    // Call the server-side action to update an existing book
-    await updateBook(formData);
+  const handleEditClick = (book: Book) => {
+    setSelectedBook(book); // Set the book to edit
   };
+
+  // Function to delete a book
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(`/api/books/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) alert ("Failed to delete book");
+      fetchBooks(); // Refresh the book list after deletion
+    } catch (error) {
+      console.log("Error deleting book:", error);
+    }
+  };
+  
+  
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
-
-      {/* Create Book Form */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Create Book</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Book Name</label>
-            <input type="text" name="name" placeholder="Book Name" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Author</label>
-            <input type="text" name="author" placeholder="Author" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
-            <textarea name="description" placeholder="Description" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Image URL</label>
-            <input type="text" name="imageUrl" placeholder="Image URL" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Price</label>
-            <input type="number" name="price" placeholder="Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Stock</label>
-            <input type="number" name="stock" placeholder="Stock" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Published Date</label>
-            <input type="date" name="publishedAt" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create Book</button>
-        </form>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Fot Staff Only</h1>
+        <button
+          onClick={() => setShowCreateForm(true)}
+          className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+        >
+          Create Book
+        </button>
       </div>
 
-      {/* Update Book Form */}
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Update Book</h2>
-        <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Book ID</label>
-            <input type="number" name="id" placeholder="Book ID" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Name</label>
-            <input type="text" name="name" placeholder="Updated Name" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Author</label>
-            <input type="text" name="author" placeholder="Updated Author" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Image URL</label>
-            <input type="text" name="imageUrl" placeholder="Updated Image URL" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Price</label>
-            <input type="number" name="price" placeholder="Updated Price" step="0.01" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Stock</label>
-            <input type="number" name="stock" placeholder="Updated Stock" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Updated Published Date</label>
-            <input type="date" name="publishedAt" required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          <button type="submit" className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Update Book</button>
-        </form>
+      {/* Create Book Form */}
+      {showCreateForm && (
+        <CreateForm
+          onClose={() => setShowCreateForm(false)}
+          onBookCreated={fetchBooks}
+        />
+      )}
+
+      {/* Edit Book Form */}
+      {selectedBook && (
+        <EditForm
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
+          onBookUpdated={fetchBooks}
+        />
+      )}
+
+      {/* Display Books */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {books.length === 0 ? (
+          <p>No books available.</p>
+        ) : (
+          books.map((book) => (
+            <div
+              key={book.id}
+              className="bg-gray-100 p-4 rounded shadow flex flex-col items-center"
+            >
+              <img
+                src={book.imageUrl}
+                alt="Book cover"
+                className="w-full h-48 object-cover rounded-md mb-4"
+              />
+              <h3 className="text-lg font-bold mb-2 text-center">{book.name}</h3>
+              <p className="text-sm text-gray-700">Author: {book.author}</p>
+              <p className="text-sm text-gray-700 line-clamp-2">{book.description}</p>
+              <p className="text-sm text-gray-700">Price: ${book.price.toFixed(2)}</p>
+              <p className="text-sm text-gray-700">Stock: {book.stock}</p>
+              <p className="text-sm text-gray-700">
+                Published At: {new Date(book.publishedAt).toLocaleDateString()}
+              </p>
+              <button
+                onClick={() => handleEditClick(book)}
+                className="mt-4 bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600"
+              >
+                Edit
+              </button>
+
+              {/* Delete Button */}
+              <button
+                className="px-4 py-2 text-white bg-red-500 rounded mt-2"
+                onClick={() => handleDelete(book.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
