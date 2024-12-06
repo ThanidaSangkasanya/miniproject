@@ -42,8 +42,7 @@ const Navbar: React.FC = () => {
           <RegisterButton />
           <CartButton />
          
-        <StaffButton />
-      
+        
         </div>
 
         {/* Hamburger Icon */}

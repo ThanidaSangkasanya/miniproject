@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { Book } from "../../types/books";
 import CreateForm from "../component_staff/CreateForm";
 import EditForm from "../component_staff/EditForm";
@@ -9,6 +10,7 @@ export default function Dashboard() {
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null); // For editing
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const router = useRouter(); // Initialize the useRouter hook
 
   // Fetch books from the API
   const fetchBooks = async () => {
@@ -35,19 +37,25 @@ export default function Dashboard() {
       const response = await fetch(`/api/books/${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) alert ("Failed to delete book");
+      if (!response.ok) alert("Failed to delete book");
       fetchBooks(); // Refresh the book list after deletion
     } catch (error) {
       console.log("Error deleting book:", error);
     }
   };
-  
-  
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Fot Staff Only</h1>
+        {/* Back Button */}
+        <button
+          onClick={() => router.push("/")} // Navigate to the home page
+          className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300"
+        >
+          Back
+        </button>
+        
+        <h1 className="text-3xl font-bold">For Staff Only</h1>
         <button
           onClick={() => setShowCreateForm(true)}
           className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
